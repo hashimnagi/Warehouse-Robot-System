@@ -1,0 +1,15 @@
+L01 PACKING Packing_North
+L02 RACK Rack_Zone_A1
+L03 RACK Rack_Zone_A2
+L04 RACK Rack_Zone_A3
+L05 RACK Rack_Zone_B1
+L06 RACK Rack_Zone_B2
+L07 RACK Rack_Zone_B3
+L08 RACK Rack_Zone_C1
+L09 RACK Rack_Zone_C2
+L10 CHARGING Charging_Bay_1
+L11 CHARGING Charging_Bay_2
+L12 PACKING Packing_South
+L13 RACK Rack_Zone_D1
+L14 CHARGING Charging_Bay_3
+L15 PACKING Packing_East
