@@ -139,6 +139,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Graph.cpp" />
     <ClCompile Include="Location.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
