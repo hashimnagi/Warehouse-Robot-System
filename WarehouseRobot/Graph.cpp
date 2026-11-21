@@ -1,5 +1,30 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include "Graph.h"
+
+static bool textToType(string text, LocationType& type)
+{
+    if (text == "RACK")
+    {
+        type = RACK;
+        return true;
+    }
+
+    if (text == "PACKING")
+    {
+        type = PACKING;
+        return true;
+    }
+
+    if (text == "CHARGING")
+    {
+        type = CHARGING;
+        return true;
+    }
+
+    return false;
+}
 
 //Converts the status enum to string
 static string statusToText(PathStatus status)
@@ -65,6 +90,70 @@ bool Graph::addLocation(string id, LocationType type, string name)
         head = newLocation;
         locationCount++;    
         return true;
+}
+
+bool Graph::loadLocations(string fileName)
+{
+    ifstream file(fileName);
+
+    if (!file.is_open())
+    {
+        cout << "Could not open " << fileName << endl;
+        return false;
+    }
+
+    string line;
+    int lineNumber = 0;
+    int loadedCount = 0;
+
+    while (getline(file, line))
+    {
+        lineNumber++;
+
+        if (line == "")
+        {
+            continue;
+        }
+
+        stringstream lineReader(line);
+        string id;
+        string typeText;
+        string name;
+        string extra;
+
+        lineReader >> id >> typeText >> name;
+
+        if (lineReader.fail())
+        {
+            cout << "Line " << lineNumber << ": missing field, skipped." << endl;
+            continue;
+        }
+
+        if (lineReader >> extra)
+        {
+            cout << "Line " << lineNumber << ": too many fields, skipped." << endl;
+            continue;
+        }
+
+        LocationType type;
+
+        if (!textToType(typeText, type))
+        {
+            cout << "Line " << lineNumber << ": invalid type " << typeText << ", skipped." << endl;
+            continue;
+        }
+
+        if (!addLocation(id, type, name))
+        {
+            cout << "Line " << lineNumber << ": duplicate or empty ID, skipped." << endl;
+            continue;
+        }
+
+        loadedCount++;
+    }
+
+    cout << loadedCount << " locations loaded." << endl;
+    return true;
 }
 
 //Adds a path between the vertices

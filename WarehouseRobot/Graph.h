@@ -15,6 +15,7 @@ public:
     ~Graph();
 
     bool addLocation(string id, LocationType type, string name);
+    bool loadLocations(string fileName);
     bool addPathway(string fromID, string toID, int distance);
     bool removePathway(string fromID, string toID);
     bool blockPathway(string fromID, string toID);
