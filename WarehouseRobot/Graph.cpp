@@ -33,7 +33,6 @@ Graph::Graph()
 {
     head = NULL;
     locationCount = 0;
-
 }
 
 Graph::~Graph()
@@ -64,10 +63,135 @@ bool Graph::addLocation(string id, LocationType type, string name)
         Location* newLocation = new Location(id, type, name);
         newLocation->next = head;
         head = newLocation;
-        locationCount++;
-
+        locationCount++;    
         return true;
 }
+
+//Adds a path between the vertices
+bool Graph::addPathway(string fromID, string toID, int distance)
+{
+    Location* fromLocation = findLocation(fromID);
+    Location* toLocation = findLocation(toID);
+
+    if (fromLocation == NULL || toLocation == NULL)
+    {
+        return false;
+    }
+
+    if (fromID == toID)
+    {
+        return false;
+    }
+
+    if (distance <= 0)
+    {
+        return false;
+    }
+
+    if (fromLocation->findEdge(toID) != NULL)
+    {
+        return false;
+    }
+        
+    if (toLocation->findEdge(fromID) != NULL)
+    {
+        return false;
+    }
+    if (!fromLocation->addEdge(toLocation, distance, OPEN))
+    {
+        return false;
+    }
+
+    if (!toLocation->addEdge(fromLocation, distance, OPEN))
+    {
+        fromLocation->removeEdge(toID);
+        return false;
+    }
+
+    return true;
+}
+
+//removes the path between vertices
+bool Graph::removePathway(string fromID, string toID)
+{
+    Location* fromLocation = findLocation(fromID);
+    Location* toLocation = findLocation(toID);
+
+    if (fromLocation == NULL || toLocation == NULL)
+    {
+        return false;
+    }
+
+    if (fromLocation->findEdge(toID) == NULL)
+    {
+        return false;
+    }
+
+    fromLocation->removeEdge(toID);
+    toLocation->removeEdge(fromID);
+
+    return true;
+}
+//blocks the path 
+bool Graph::blockPathway(string fromID, string toID)
+{
+    Location* fromLocation = findLocation(fromID);
+    Location* toLocation = findLocation(toID);
+
+    if (fromLocation == NULL || toLocation == NULL)
+    {
+        return false;
+    }
+
+    Edge* forwardEdge = fromLocation->findEdge(toID);
+    Edge* backwardEdge = toLocation->findEdge(fromID);
+
+    if (forwardEdge == NULL || backwardEdge == NULL)
+    {
+        return false;
+    }
+
+    if (forwardEdge->status == BLOCKED && backwardEdge->status == BLOCKED)
+    {
+        return false;
+    }
+
+    forwardEdge->status = BLOCKED;
+    backwardEdge->status = BLOCKED;
+
+    return true;
+}
+
+//Changes both edges of the pathway back to open
+bool Graph::reopenPathway(string fromID, string toID)
+{
+    Location* fromLocation = findLocation(fromID);
+    Location* toLocation = findLocation(toID);
+
+    if (fromLocation == NULL || toLocation == NULL)
+    {
+        return false;
+    }
+
+    Edge* forwardEdge = fromLocation->findEdge(toID);
+    Edge* backwardEdge = toLocation->findEdge(fromID);
+
+    if (forwardEdge == NULL || backwardEdge == NULL)
+    {
+        return false;
+    }
+
+    if (forwardEdge->status == OPEN && backwardEdge->status == OPEN)
+    {
+        return false;
+    }
+
+    forwardEdge->status = OPEN;
+    backwardEdge->status = OPEN;
+
+    return true;
+}
+
 
 // searches the list for a location with this ID 
 Location* Graph::findLocation(string id)
@@ -118,7 +242,6 @@ void Graph::displayAll()
             cout << "    -> " << edge->destination->getID()
                 << "  distance " << edge->distance
                 << "  " << statusToText(edge->status) << endl;
-
                 edge = edge->next;
         }
 

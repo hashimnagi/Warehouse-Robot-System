@@ -15,6 +15,10 @@ public:
     ~Graph();
 
     bool addLocation(string id, LocationType type, string name);
+    bool addPathway(string fromID, string toID, int distance);
+    bool removePathway(string fromID, string toID);
+    bool blockPathway(string fromID, string toID);
+    bool reopenPathway(string fromID, string toID);
     Location* findLocation(string id);
     Location* getFirstLocation();
     int getLocationCount();
