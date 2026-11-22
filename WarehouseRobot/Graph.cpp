@@ -3,6 +3,23 @@
 #include <sstream>
 #include "Graph.h"
 
+static bool textToStatus(string text, PathStatus& status)
+{
+    if (text == "OPEN")
+    {
+        status = OPEN;
+        return true;
+    }
+
+    if (text == "BLOCKED")
+    {
+        status = BLOCKED;
+        return true;
+    }
+
+    return false;
+}
+
 static bool textToType(string text, LocationType& type)
 {
     if (text == "RACK")
@@ -156,6 +173,76 @@ bool Graph::loadLocations(string fileName)
     return true;
 }
 
+bool Graph::loadPathways(string fileName)
+{
+    ifstream file(fileName);
+
+    if (!file.is_open())
+    {
+        cout << "Could not open " << fileName << endl;
+        return false;
+    }
+
+    string line;
+    int lineNumber = 0;
+    int loadedCount = 0;
+
+    while (getline(file, line))
+    {
+        lineNumber++;
+
+        if (line == "")
+        {
+            continue;
+        }
+
+        stringstream lineReader(line);
+        string fromID;
+        string toID;
+        int distance;
+        string statusText;
+        string extra;
+
+        lineReader >> fromID >> toID >> distance >> statusText;
+
+        if (lineReader.fail())
+        {
+            cout << "Line " << lineNumber << ": missing field or distance is not a number, skipped." << endl;
+            continue;
+        }
+
+        if (lineReader >> extra)
+        {
+            cout << "Line " << lineNumber << ": too many fields, skipped." << endl;
+            continue;
+        }
+
+        PathStatus status;
+
+        if (!textToStatus(statusText, status))
+        {
+            cout << "Line " << lineNumber << ": invalid status " << statusText << ", skipped." << endl;
+            continue;
+        }
+
+        if (!addPathway(fromID, toID, distance))
+        {
+            cout << "Line " << lineNumber << ": pathway rejected (missing location, same location, distance not above 0, or duplicate), skipped." << endl;
+            continue;
+        }
+
+        if (status == BLOCKED)
+        {
+            blockPathway(fromID, toID);
+        }
+
+        loadedCount++;
+    }
+
+    cout << loadedCount << " pathways loaded." << endl;
+    return true;
+}
+
 //Adds a path between the vertices
 bool Graph::addPathway(string fromID, string toID, int distance)
 {
@@ -279,6 +366,17 @@ bool Graph::reopenPathway(string fromID, string toID)
     backwardEdge->status = OPEN;
 
     return true;
+}
+
+void Graph::resetSearchData()
+{
+    Location* current = head;
+
+    while (current != NULL)
+    {
+        current->resetSearchData();
+        current = current->next;
+    }
 }
 
 

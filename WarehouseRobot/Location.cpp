@@ -19,6 +19,7 @@ void Location::resetSearchData()
 	searchDistance = INT_MAX;
 	searchHops = 0;
 	searchVisited = false;
+	searchPrevious = NULL;
 }
 
 //remove the memory taken from heap  
