@@ -140,6 +140,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BFS.cpp" />
+    <ClCompile Include="ChargingNetwork.cpp" />
+    <ClCompile Include="ChargingQueue.cpp" />
+    <ClCompile Include="ChargingStation.cpp" />
     <ClCompile Include="Dijkstra.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="GraphMenu.cpp" />
@@ -152,6 +155,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BFS.h" />
+    <ClInclude Include="ChargingNetwork.h" />
+    <ClInclude Include="ChargingQueue.h" />
+    <ClInclude Include="ChargingStation.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="GraphMenu.h" />

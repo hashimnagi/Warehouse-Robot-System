@@ -1,62 +1,32 @@
 #include <iostream>
-#include <string>
 #include "Graph.h"
-#include "UndoStack.h"
-#include "GraphMenu.h"
-#include "UndoMenu.h"
+#include "ChargingNetwork.h"
 using namespace std;
-
-static int askMainChoice()
-{
-    while (true)
-    {
-        string text;
-        cout << "Enter your choice: ";
-
-        if (!getline(cin, text))
-        {
-            return 0;
-        }
-
-        if (text.length() == 1 && text[0] >= '0' && text[0] <= '2')
-        {
-            return text[0] - '0';
-        }
-
-        cout << "Invalid choice. Enter 0, 1 or 2." << endl;
-    }
-}
 
 int main()
 {
-
     Graph warehouse;
-    UndoStack undoStack;
-    int choice = -1;
-    undoStack.pushQuantityUpdate("P101", "RK01", 10, 15);
-    undoStack.pushMaintenanceChange("RB02", AVAILABLE);
-    while (choice != 0)
-    {
-        cout << endl;
-        cout << "===== MAIN MENU =====" << endl;
-        cout << "1. Warehouse layout" << endl;
-        cout << "2. Undo history" << endl;
-        cout << "0. Exit" << endl;
+    ChargingNetwork network;
+    warehouse.loadLocations("data\\locations.txt");
+    warehouse.loadPathways("data\\pathways.txt");
+    network.load("data\\chargers.txt", warehouse);
+    network.displayAll();
 
-        choice = askMainChoice();
+    ChargingStation* c01 = network.findStation("C01");
+    c01->startCharging("RB02");
+    c01->getQueue().enqueue("RB01");
+    c01->getQueue().enqueue("RB03");
+    cout << endl << "RB02 charging, RB01 and RB03 waiting:" << endl;
+    c01->display();
 
-        switch (choice)
-        {
-        case 1:
-            showGraphMenu(warehouse, undoStack);
-            break;
-        case 2:
-            showUndoMenu(undoStack, warehouse);
-            break;
-        case 0:
-            break;
-        }
-    }
+    c01->finishCharging("RB02");
+    string nextRobot = c01->getQueue().dequeue();
+    c01->startCharging(nextRobot);
+    cout << endl << "RB02 finished, " << nextRobot << " starts:" << endl;
+    c01->display();
 
+    cout << endl << "RB03 removed from the queue: " << boolalpha << c01->getQueue().remove("RB03") << endl;
+    cout << "RB03 removed again: " << c01->getQueue().remove("RB03") << endl;
+    c01->display();
     return 0;
 }
