@@ -393,7 +393,7 @@ static void removePathwayOption(Graph& warehouse)
     cout << "Pathway " << fromID << " - " << toID << " removed." << endl;
 }
 
-static void blockPathwayOption(Graph& warehouse)
+static void blockPathwayOption(Graph& warehouse, UndoStack& undoStack)
 {
     string fromID;
     string toID;
@@ -404,6 +404,7 @@ static void blockPathwayOption(Graph& warehouse)
     }
 
     warehouse.blockPathway(fromID, toID);
+    undoStack.pushPathwayBlock(fromID, toID, OPEN);
     cout << "Pathway " << fromID << " - " << toID << " is now BLOCKED." << endl;
 }
 
@@ -500,7 +501,7 @@ static void routeOption(Graph& warehouse)
     delete route;
 }
 
-void showGraphMenu(Graph& warehouse)
+void showGraphMenu(Graph& warehouse, UndoStack& undoStack)
 {
     int choice = -1;
 
@@ -540,7 +541,7 @@ void showGraphMenu(Graph& warehouse)
             removePathwayOption(warehouse);
             break;
         case 6:
-            blockPathwayOption(warehouse);
+            blockPathwayOption(warehouse, undoStack);
             break;
         case 7:
             reopenPathwayOption(warehouse);

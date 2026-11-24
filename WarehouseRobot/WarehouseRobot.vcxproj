@@ -147,6 +147,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RackMap.cpp" />
     <ClCompile Include="Route.cpp" />
+    <ClCompile Include="UndoMenu.cpp" />
+    <ClCompile Include="UndoStack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BFS.h" />
@@ -156,6 +158,8 @@
     <ClInclude Include="Location.h" />
     <ClInclude Include="RackMap.h" />
     <ClInclude Include="Route.h" />
+    <ClInclude Include="UndoMenu.h" />
+    <ClInclude Include="UndoStack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
