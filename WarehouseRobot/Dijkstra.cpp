@@ -1,11 +1,12 @@
 #include <iostream>
 #include <climits>
-#include "Dijkstra.h"
+#include "Graph.h"
+#include "Route.h"
 
-Route* Dijkstra::findShortestRoute(Graph& graph, string fromID, string toID)
+Route* Graph::getShortestRoute(string fromID, string toID)
 {
-    Location* start = graph.findLocation(fromID);
-    Location* end = graph.findLocation(toID);
+    Location* start = findLocation(fromID);
+    Location* end = findLocation(toID);
 
     if (start == NULL)
     {
@@ -19,13 +20,13 @@ Route* Dijkstra::findShortestRoute(Graph& graph, string fromID, string toID)
         return NULL;
     }
 
-    graph.resetSearchData();
+    resetSearchData();
     start->searchDistance = 0;
 
     while (true)
     {
         Location* best = NULL;
-        Location* scan = graph.getFirstLocation();
+        Location* scan = head;
 
         while (scan != NULL)
         {
@@ -104,5 +105,5 @@ Route* Dijkstra::findShortestRoute(Graph& graph, string fromID, string toID)
         step = step->searchPrevious;
     }
 
-    return route;
+    return route; //returns the head route
 }

@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include "Graph.h"
+#include "Route.h"
 
 static bool textToStatus(string text, PathStatus& status)
 {
@@ -109,6 +110,7 @@ bool Graph::addLocation(string id, LocationType type, string name)
         return true;
 }
 
+//Load loactions from the file
 bool Graph::loadLocations(string fileName)
 {
     ifstream file(fileName);
@@ -173,6 +175,7 @@ bool Graph::loadLocations(string fileName)
     return true;
 }
 
+//Load pathways from the file
 bool Graph::loadPathways(string fileName)
 {
     ifstream file(fileName);
@@ -338,6 +341,41 @@ bool Graph::blockPathway(string fromID, string toID)
     return true;
 }
 
+//gets distance between 2 vertices by their ID's
+int Graph::getDistance(string fromID, string toID)
+{
+    Route* route = getShortestRoute(fromID, toID);
+
+    if (route == NULL)
+    {
+        return -1;
+    }
+
+    int distance = route->getTotalDistance();
+    delete route;
+    return distance;
+}
+
+//checks the path status between two vertices
+bool Graph::isPathwayOpen(string fromID, string toID)
+{
+    Location* fromLocation = findLocation(fromID);
+
+    if (fromLocation == NULL)
+    {
+        return false;
+    }
+
+    Edge* edge = fromLocation->findEdge(toID);
+
+    if (edge == NULL)
+    {
+        return false;
+    }
+
+    return edge->status == OPEN;
+}
+
 //Changes both edges of the pathway back to open
 bool Graph::reopenPathway(string fromID, string toID)
 {
@@ -368,6 +406,8 @@ bool Graph::reopenPathway(string fromID, string toID)
     return true;
 }
 
+
+//Resets the data of a vertix
 void Graph::resetSearchData()
 {
     Location* current = head;

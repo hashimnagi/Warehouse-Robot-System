@@ -35,8 +35,6 @@ private:
     Location* searchPrevious;
 
     friend class Graph;
-    friend class BFS;
-    friend class Dijkstra;
 
 public:
     Location(string locationID, LocationType locationType, string locationName);
