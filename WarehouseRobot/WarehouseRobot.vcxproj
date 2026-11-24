@@ -142,6 +142,7 @@
     <ClCompile Include="BFS.cpp" />
     <ClCompile Include="Dijkstra.cpp" />
     <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="GraphMenu.cpp" />
     <ClCompile Include="Location.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RackMap.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="BFS.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Graph.h" />
+    <ClInclude Include="GraphMenu.h" />
     <ClInclude Include="Location.h" />
     <ClInclude Include="RackMap.h" />
     <ClInclude Include="Route.h" />
