@@ -21,6 +21,16 @@ static bool isValidStationID(string id)
     return true;
 }
 
+static bool isSmallerID(string first, string second)
+{
+    if (first.length() != second.length())
+    {
+        return first.length() < second.length();
+    }
+
+    return first < second;
+}
+
 ChargingNetwork::ChargingNetwork()
 {
     head = NULL;
@@ -216,4 +226,136 @@ void ChargingNetwork::displayAll()
         current->display();
         current = current->next;
     }
+}
+
+StationChoice ChargingNetwork::findBestStation(Graph& graph, string fromLocationID, double battery, double batteryRate)
+{
+    StationChoice choice;
+    choice.station = NULL;
+    choice.distance = 0;
+    choice.hasFreeSlot = false;
+    choice.reason = "";
+
+    if (graph.findLocation(fromLocationID) == NULL)
+    {
+        choice.reason = "Location " + fromLocationID + " does not exist.";
+        return choice;
+    }
+
+    ChargingStation* bestFree = NULL;
+    int bestFreeDistance = 0;
+    ChargingStation* bestAny = NULL;
+    int bestAnyDistance = 0;
+    bool anyReachable = false;
+    ChargingStation* current = head;
+
+    while (current != NULL)
+    {
+        int distance = graph.getDistance(fromLocationID, current->getLocationID());
+
+        if (distance >= 0)
+        {
+            anyReachable = true;
+
+            if (distance * batteryRate <= battery)
+            {
+                if (bestAny == NULL || distance < bestAnyDistance
+                    || (distance == bestAnyDistance && isSmallerID(current->getID(), bestAny->getID())))
+                {
+                    bestAny = current;
+                    bestAnyDistance = distance;
+                }
+
+                if (current->hasFreeSlot())
+                {
+                    if (bestFree == NULL || distance < bestFreeDistance
+                        || (distance == bestFreeDistance && isSmallerID(current->getID(), bestFree->getID())))
+                    {
+                        bestFree = current;
+                        bestFreeDistance = distance;
+                    }
+                }
+            }
+        }
+
+        current = current->next;
+    }
+
+    if (bestFree != NULL)
+    {
+        choice.station = bestFree;
+        choice.distance = bestFreeDistance;
+        choice.hasFreeSlot = true;
+    }
+    else if (bestAny != NULL)
+    {
+        choice.station = bestAny;
+        choice.distance = bestAnyDistance;
+        choice.hasFreeSlot = false;
+    }
+    else if (!anyReachable)
+    {
+        choice.reason = "No charging station is reachable from " + fromLocationID + ".";
+    }
+    else
+    {
+        choice.reason = "Not enough battery to reach any charging station. Handle the robot manually (set it Unavailable).";
+    }
+
+    return choice;
+}
+
+int ChargingNetwork::requestCharging(string robotID, ChargingStation* station)
+{
+    if (robotID == "" || station == NULL)
+    {
+        return CHARGE_REFUSED;
+    }
+
+    if (findStationCharging(robotID) != NULL || findStationQueueing(robotID) != NULL)
+    {
+        return CHARGE_REFUSED;
+    }
+
+    if (station->hasFreeSlot())
+    {
+        station->startCharging(robotID);
+        return CHARGE_STARTED;
+    }
+
+    station->getQueue().enqueue(robotID);
+    return CHARGE_QUEUED;
+}
+
+bool ChargingNetwork::completeCharging(string robotID, string& startedRobotID)
+{
+    startedRobotID = "";
+    ChargingStation* station = findStationCharging(robotID);
+
+    if (station == NULL)
+    {
+        return false;
+    }
+
+    station->finishCharging(robotID);
+
+    if (!station->getQueue().isEmpty())
+    {
+        startedRobotID = station->getQueue().dequeue();
+        station->startCharging(startedRobotID);
+    }
+
+    return true;
+}
+
+bool ChargingNetwork::removeFromQueue(string robotID)
+{
+    ChargingStation* station = findStationQueueing(robotID);
+
+    if (station == NULL)
+    {
+        return false;
+    }
+
+    return station->getQueue().remove(robotID);
 }
