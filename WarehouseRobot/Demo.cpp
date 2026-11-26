@@ -12,7 +12,7 @@ static bool loadDemoPathways(Graph& warehouse, const string& fileName)
 {
     ifstream file(fileName);
     if (!file.is_open()) {
-        cerr << "Could not open " << fileName << "\n";
+        cout << "Could not open " << fileName << "\n";
         return false;
     }
 
@@ -46,7 +46,7 @@ static bool loadDemoPathways(Graph& warehouse, const string& fileName)
         }
 
         if (!rowOk) {
-            cerr << fileName << ", line " << lineNumber << " rejected.\n";
+            cout << fileName << ", line " << lineNumber << " rejected.\n";
             allValid = false;
         }
     }
@@ -71,12 +71,35 @@ int main(int argc, char* argv[])
     OrderManager orders(inventory);
 
     // Saari data files step-by-step load karo
-    if (!warehouse.loadLocations(layoutFolder + "/locations.txt")) return 1;
-    if (!loadDemoPathways(warehouse, layoutFolder + "/pathways.txt")) return 1;
-    if (!inventory.loadRacks(stockFolder + "/racks.txt")) return 1;
-    if (!inventory.loadProducts(stockFolder + "/products.txt")) return 1;
-    if (!inventory.loadInventory(stockFolder + "/inventory.txt")) return 1;
-    if (!orders.loadOrders(stockFolder + "/orders.txt")) return 1;
+    if (!warehouse.loadLocations(layoutFolder + "/locations.txt")) 
+    {
+        cout << "Failed to load locations.\n";
+        return 1;
+    }
+    if (!loadDemoPathways(warehouse, layoutFolder + "/pathways.txt"))
+    {
+        cout << "Failed to load pathways.\n";
+        return 1;
+    }
+    if (!inventory.loadRacks(stockFolder + "/racks.txt")) 
+    {
+        cout << "Failed to load racks.\n";
+        return 1;
+    }
+    if (!inventory.loadProducts(stockFolder + "/products.txt"))
+    {
+        cout << "Failed to load products.\n";
+        return 1;
+    }
+    if (!inventory.loadInventory(stockFolder + "/inventory.txt"))
+    {
+        cout << "Failed to load inventory.\n";
+        return 1;
+    }
+    if (!orders.loadOrders(stockFolder + "/orders.txt")) {
+        cout << "Failed to load orders.\n";
+        return 1;
+    }
 
     // Main demo menu loop
     string selection;
