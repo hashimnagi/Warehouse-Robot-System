@@ -139,33 +139,56 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AVLTree.cpp" />
     <ClCompile Include="BFS.cpp" />
+    <ClCompile Include="ChargingMenu.cpp" />
     <ClCompile Include="ChargingNetwork.cpp" />
     <ClCompile Include="ChargingQueue.cpp" />
     <ClCompile Include="ChargingStation.cpp" />
+    <ClCompile Include="Demo.cpp" />
     <ClCompile Include="Dijkstra.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="GraphMenu.cpp" />
+    <ClCompile Include="InventoryManager.cpp" />
+    <ClCompile Include="InventoryOrderMenus.cpp" />
     <ClCompile Include="Location.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Order.cpp" />
+    <ClCompile Include="OrderList.cpp" />
+    <ClCompile Include="OrderManager.cpp" />
+    <ClCompile Include="OrderQueue.cpp" />
+    <ClCompile Include="Product.cpp" />
+    <ClCompile Include="RackDistances.cpp" />
+    <ClCompile Include="RackEntry.cpp" />
     <ClCompile Include="RackMap.cpp" />
     <ClCompile Include="Route.cpp" />
     <ClCompile Include="UndoMenu.cpp" />
     <ClCompile Include="UndoStack.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AVLTree.h" />
     <ClInclude Include="BFS.h" />
+    <ClInclude Include="ChargingMenu.h" />
     <ClInclude Include="ChargingNetwork.h" />
     <ClInclude Include="ChargingQueue.h" />
     <ClInclude Include="ChargingStation.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="GraphMenu.h" />
+    <ClInclude Include="InventoryManager.h" />
     <ClInclude Include="Location.h" />
+    <ClInclude Include="Order.h" />
+    <ClInclude Include="OrderList.h" />
+    <ClInclude Include="OrderManager.h" />
+    <ClInclude Include="OrderQueue.h" />
+    <ClInclude Include="Product.h" />
+    <ClInclude Include="RackDistances.h" />
+    <ClInclude Include="RackEntry.h" />
     <ClInclude Include="RackMap.h" />
     <ClInclude Include="Route.h" />
     <ClInclude Include="UndoMenu.h" />
     <ClInclude Include="UndoStack.h" />
+    <ClInclude Include="WarehouseInput.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

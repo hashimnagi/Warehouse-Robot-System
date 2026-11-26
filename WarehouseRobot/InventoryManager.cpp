@@ -28,7 +28,7 @@ RackAllocation::~RackAllocation(){
 }
 
 // Move constructor: proposal return karte waqt linked list ke pointers shift kar dete hain
-RackAllocation::RackAllocation(RackAllocation&& source){
+RackAllocation::RackAllocation(RackAllocation&& source) noexcept {
     first = source.first;
     last = source.last;
     requested = source.requested;
