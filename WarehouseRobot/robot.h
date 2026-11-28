@@ -1,13 +1,13 @@
 #include <iostream>
 
-enum StatusValues {available,assigned,waiting_for_charging,charging,unavailable}
+enum StatusValues {available,assigned,waiting_for_charging,charging,unavailable};
 
 class Robot
 {
     public:
     Robot()
     {
-        robotID=locationID=batteryLevel=maxCapacity=status=assigned=0;
+        robotID=locationID=batteryLevel=maxCapacity=status=assignedTask=0;
     }
     protected:
     int robotID,
@@ -15,6 +15,6 @@ class Robot
     batteryLevel,
     maxCapacity,    // in kg
     status,
-    assignedTask,   // order id or task id, empty if none
+    assignedTask;   // order id or task id, empty if none
 
-}
+};
